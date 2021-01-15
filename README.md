@@ -1,11 +1,11 @@
 [![Deploy](https://github.com/tiangolo/nginx-rtmp-docker/workflows/Deploy/badge.svg)](https://github.com/tiangolo/nginx-rtmp-docker/actions?query=workflow%3ADeploy)
 
-## Supported tags and respective `Dockerfile` links
+# preface
+This project forked from [**tiangolo/nginx-rtmp-docker**](https://github.com/tiangolo/nginx-rtmp-docker), aim to run nginx-rtmp on RaspberryPI3. 
 
-* [`latest` _(Dockerfile)_](https://github.com/tiangolo/nginx-rtmp-docker/blob/master/Dockerfile)
-
-**Note**: Note: There are [tags for each build date](https://hub.docker.com/r/tiangolo/nginx-rtmp/tags). If you need to "pin" the Docker image version you use, you can select one of those tags. E.g. `tiangolo/nginx-rtmp:latest-2020-08-16`.
-
+Here's my modification list:
+* Dockerfile base image changed from **buildpack-deps:stretch** to **node:14.15-buster**.
+* Add patch/Makefile, patch/ngx_rtmp_eval.c to fix nginx compilation issue in RaspberryPI3 platform.
 # nginx-rtmp
 
 [**Docker**](https://www.docker.com/) image with [**Nginx**](http://nginx.org/en/) using the [**nginx-rtmp-module**](https://github.com/arut/nginx-rtmp-module) module for live multimedia (video) streaming.
@@ -18,9 +18,13 @@ This was inspired by other similar previous images from [dvdgiessen](https://hub
 
 The main purpose (and test case) to build it was to allow streaming from [**OBS Studio**](https://obsproject.com/) to different clients at the same time.
 
-**GitHub repo**: <https://github.com/tiangolo/nginx-rtmp-docker>
+**GitHub repo for amd64**: <https://github.com/tiangolo/nginx-rtmp-docker>
+
+**Github repo for armv7**: <https://github.com/lzcmoody/nginx-rtmp-docker>
 
 **Docker Hub image**: <https://hub.docker.com/r/tiangolo/nginx-rtmp/>
+
+**Docker Hub image for armv7**: <https://hub.docker.com/r/charleslucloud/nginx-rtmp>
 
 ## Details
 
@@ -64,14 +68,6 @@ docker logs nginx-rtmp
 ```
 
 ## Extending
-
-If you need to modify the configurations you can create a file `nginx.conf` and replace the one in this image using a `Dockerfile` that is based on the image, for example:
-
-```Dockerfile
-FROM tiangolo/nginx-rtmp
-
-COPY nginx.conf /etc/nginx/nginx.conf
-```
 
 The current `nginx.conf` contains:
 
