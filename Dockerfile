@@ -1,14 +1,13 @@
-FROM buildpack-deps:stretch
+FROM node:14.15-buster
 
-LABEL maintainer="Sebastian Ramirez <tiangolo@gmail.com>"
+LABEL maintainer="Lu Charles <lzcmoody@live.com>"
 
 # Versions of Nginx and nginx-rtmp-module to use
 ENV NGINX_VERSION nginx-1.18.0
 ENV NGINX_RTMP_MODULE_VERSION 1.2.1
 
 # Install dependencies
-RUN apt-get update && \
-    apt-get install -y ca-certificates openssl libssl-dev && \
+RUN apt-get install -y ca-certificates openssl libssl-dev && \
     rm -rf /var/lib/apt/lists/*
 
 # Download and decompress Nginx
@@ -39,7 +38,12 @@ RUN cd /tmp/build/nginx/${NGINX_VERSION} && \
         --with-http_ssl_module \
         --with-threads \
         --with-ipv6 \
-        --add-module=/tmp/build/nginx-rtmp-module/nginx-rtmp-module-${NGINX_RTMP_MODULE_VERSION} && \
+        --add-module=/tmp/build/nginx-rtmp-module/nginx-rtmp-module-${NGINX_RTMP_MODULE_VERSION}
+
+# Workaround fix compile error
+COPY patch/Makefile /tmp/build/nginx/${NGINX_VERSION}/objs/Makefile
+COPY patch/ngx_rtmp_eval.c /tmp/build/nginx/nginx-rtmp-module/nginx-rtmp-module-${NGINX_RTMP_MODULE_VERSION}/ngx_rtmp_eval.c
+RUN cd /tmp/build/nginx/${NGINX_VERSION} && \
     make -j $(getconf _NPROCESSORS_ONLN) && \
     make install && \
     mkdir /var/lock/nginx && \
@@ -50,7 +54,7 @@ RUN ln -sf /dev/stdout /var/log/nginx/access.log && \
     ln -sf /dev/stderr /var/log/nginx/error.log
 
 # Set up config file
-COPY nginx.conf /etc/nginx/nginx.conf
+COPY patch/nginx.conf /etc/nginx/nginx.conf
 
 EXPOSE 1935
 CMD ["nginx", "-g", "daemon off;"]
