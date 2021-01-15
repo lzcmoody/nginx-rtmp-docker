@@ -1,14 +1,14 @@
 [![Deploy](https://github.com/tiangolo/nginx-rtmp-docker/workflows/Deploy/badge.svg)](https://github.com/tiangolo/nginx-rtmp-docker/actions?query=workflow%3ADeploy)
 
-# preface
-This project forked from [**tiangolo/nginx-rtmp-docker**](https://github.com/tiangolo/nginx-rtmp-docker), aim to run nginx-rtmp on RaspberryPI3. 
-
-Here's my modification list:
-* Dockerfile base image changed from **buildpack-deps:stretch** to **node:14.15-buster**.
-* Add patch/Makefile, patch/ngx_rtmp_eval.c to fix nginx compilation issue in RaspberryPI3 platform.
 # nginx-rtmp
 
 [**Docker**](https://www.docker.com/) image with [**Nginx**](http://nginx.org/en/) using the [**nginx-rtmp-module**](https://github.com/arut/nginx-rtmp-module) module for live multimedia (video) streaming.
+
+## preface
+This project forked from [**tiangolo/nginx-rtmp-docker**](https://github.com/tiangolo/nginx-rtmp-docker), aim to run nginx-rtmp on RaspberryPI3. 
+Here's my modification list:
+* Dockerfile base image changed from **buildpack-deps:stretch** to **node:14.15-buster**.
+* Add patch/Makefile, patch/ngx_rtmp_eval.c to fix nginx compilation issue for RaspberryPI3 platform.
 
 ## Description
 
@@ -33,7 +33,7 @@ The main purpose (and test case) to build it was to allow streaming from [**OBS 
 * For the simplest case, just run a container with this image:
 
 ```bash
-docker run -d -p 1935:1935 --name nginx-rtmp tiangolo/nginx-rtmp
+docker run -d -p 1935:1935 --name nginx-rtmp charleslucloud/nginx-rtmp:1.18.0
 ```
 
 ## How to test with OBS Studio and VLC
